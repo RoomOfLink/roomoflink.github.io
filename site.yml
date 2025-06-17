@@ -1,0 +1,26 @@
+- name: Deploy Jekyll Blog to GitHub
+  hosts: localhost
+  vars:
+    repo_dir: "/mnt/c/Users/user/Projects/roomoflink.github.io"
+  tasks:
+    - name: Run Jekyll build
+      ansible.builtin.shell: |
+        bundle exec jekyll build
+      args:
+        chdir: "{{ repo_dir }}"
+
+    - name: Add all changes
+      ansible.builtin.shell: git add .
+      args:
+        chdir: "{{ repo_dir }}"
+
+    - name: Commit changes
+      ansible.builtin.shell: git commit -m "Auto update"
+      args:
+        chdir: "{{ repo_dir }}"
+      ignore_errors: yes
+
+    - name: Push to GitHub
+      ansible.builtin.shell: git push
+      args:
+        chdir: "{{ repo_dir }}"
